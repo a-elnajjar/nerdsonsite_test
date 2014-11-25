@@ -136,6 +136,7 @@ $(function() {
         if (opration == "edit") {
             $("#update").show();
             $("#submit").hide();
+            
         }
         if (opration == "view") {
             $("#carManufacturer").attr("disabled", true);
@@ -145,10 +146,7 @@ $(function() {
             $("#passengerSeating").attr("disabled", true);
             $("#submit").attr("disabled", true);
             $("#reset").attr("disabled", true);
-        } else {
-            $("#update").hide();
-            $("#submit").show();
-        }
+        } 
     }
 
 

@@ -7,6 +7,11 @@ $(function () {
         $("#singUpForm").get(0).reset();
     });
 
+
+    $("#cancel").click(function () {
+       
+        window.location.replace("/CarsList");
+    });
     //loop to populate carYear select 
     for (i = new Date().getFullYear() ; i > 1900; i--) {
         $("#carYear").append($('<option />').val(i).html(i));
@@ -75,7 +80,7 @@ $(function () {
         function drawRow(rowData) {
             var row = $("<tr />");
             $("#jsontable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
-            row.append($("<td> <a class='deleteCars' href=" + rowData.Id + ">Delete</a>/<a class='editCars' href=CarForm?id=" + rowData.Id + "&opration=edit>Edit</a></td>"));
+            row.append($("<td> <a class='deleteCars' href=" + rowData.Id + ">Delete</a>/<a class='editCars' href=CarForm?id=" + rowData.Id + "&opration=edit>Edit</a>/<a class='editCars' href=CarForm?id=" + rowData.Id + "&opration=view>View</a></td>"));
             row.append($("<td class='customerIDCell'>" + rowData.Id + "</td>"));
             row.append($("<td>" + rowData.Manufacturer + "</td>"));
             row.append($("<td>" + rowData.Make + "</td>"));
@@ -132,6 +137,15 @@ $(function () {
             if (opration == "edit") {
                 $("#update").show();
                 $("#submit").hide();
+            }
+            if (opration == "view") {
+                $("#carManufacturer").attr("disabled", true);
+                $("#carMake").attr("disabled", true);
+                $("#carYear").attr("disabled", true);
+                $("#carColour").attr("disabled", true);
+                $("#passengerSeating").attr("disabled", true);
+                $("#submit").attr("disabled", true);
+                $("#reset").attr("disabled", true);
             }
             else {
                 $("#update").hide();

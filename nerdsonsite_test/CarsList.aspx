@@ -1,15 +1,15 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CarsList.aspx.cs" Inherits="nerdsonsite_test.CarsList" %>
+﻿<%@ Page Title="list of Cars" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CarsList.aspx.cs" Inherits="nerdsonsite_test.CarsList" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
 
-    <h2>Cars List </h2>
+    <h2>List of Cars </h2>
 
     <div id="carslist" class="table-responsive">
         <table id="jsontable" class="table " cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th>Delate/Edit</th>
+                    <th>Delate/Edit/View</th>
                     <th>ID</th>
                     <th>Manufacturer </th>
                     <th>Make </th>
@@ -20,7 +20,7 @@
             </thead>
             <tfoot>
                 <tr>
-                    <th>Delate/Edit</th>
+                    <th>Delate/Edit/View</th>
                     <th>ID</th>
                     <th>Manufacturer </th>
                     <th>Make </th>

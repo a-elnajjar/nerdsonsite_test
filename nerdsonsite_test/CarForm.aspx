@@ -65,8 +65,8 @@
                             </div>
                         </fieldset>
                         <br />
-
-
+                        
+                        <div><p class="bg-info">Click Cancel button to return to  list of Cars </p></div>
                         <div class="col-sm-offset-2 col-sm-10">
                             <input type="button" id="cancel" class="btn btn-default" value="Cancel" />
                             <input type="submit" id="submit" class="btn btn-primary" value="Submit" />

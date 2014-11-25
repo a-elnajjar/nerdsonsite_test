@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using nerdsonsite_test.Models;
 
@@ -21,7 +20,7 @@ namespace nerdsonsite_test.Models
         public ClaimsIdentity GenerateUserIdentity(ApplicationUserManager manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
-            var userIdentity = manager.CreateIdentity(this, DefaultAuthenticationTypes.ApplicationCookie);
+            ClaimsIdentity userIdentity = manager.CreateIdentity(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
             return userIdentity;
         }
@@ -30,7 +29,7 @@ namespace nerdsonsite_test.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("DefaultConnection", false)
         {
         }
 
@@ -42,6 +41,7 @@ namespace nerdsonsite_test.Models
 }
 
 #region Helpers
+
 namespace nerdsonsite_test
 {
     public static class IdentityHelper
@@ -49,27 +49,30 @@ namespace nerdsonsite_test
         // Used for XSRF when linking external logins
         public const string XsrfKey = "XsrfId";
 
+        public const string ProviderNameKey = "providerName";
+
+        public const string CodeKey = "code";
+
+        public const string UserIdKey = "userId";
+
         public static void SignIn(ApplicationUserManager manager, ApplicationUser user, bool isPersistent)
         {
             IAuthenticationManager authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
             authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            var identity = manager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-            authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
+            ClaimsIdentity identity = manager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+            authenticationManager.SignIn(new AuthenticationProperties {IsPersistent = isPersistent}, identity);
         }
 
-        public const string ProviderNameKey = "providerName";
         public static string GetProviderNameFromRequest(HttpRequest request)
         {
             return request.QueryString[ProviderNameKey];
         }
 
-        public const string CodeKey = "code";
         public static string GetCodeFromRequest(HttpRequest request)
         {
             return request.QueryString[CodeKey];
         }
 
-        public const string UserIdKey = "userId";
         public static string GetUserIdFromRequest(HttpRequest request)
         {
             return HttpUtility.UrlDecode(request.QueryString[UserIdKey]);
@@ -82,12 +85,15 @@ namespace nerdsonsite_test
 
         public static string GetUserConfirmationRedirectUrl(string code, string userId)
         {
-            return "/Account/Confirm?" + CodeKey + "=" + HttpUtility.UrlEncode(code) + "&" + UserIdKey + "=" + HttpUtility.UrlEncode(userId);
+            return "/Account/Confirm?" + CodeKey + "=" + HttpUtility.UrlEncode(code) + "&" + UserIdKey + "=" +
+                   HttpUtility.UrlEncode(userId);
         }
 
         private static bool IsLocalUrl(string url)
         {
-            return !string.IsNullOrEmpty(url) && ((url[0] == '/' && (url.Length == 1 || (url[1] != '/' && url[1] != '\\'))) || (url.Length > 1 && url[0] == '~' && url[1] == '/'));
+            return !string.IsNullOrEmpty(url) &&
+                   ((url[0] == '/' && (url.Length == 1 || (url[1] != '/' && url[1] != '\\'))) ||
+                    (url.Length > 1 && url[0] == '~' && url[1] == '/'));
         }
 
         public static void RedirectToReturnUrl(string returnUrl, HttpResponse response)
@@ -103,4 +109,5 @@ namespace nerdsonsite_test
         }
     }
 }
+
 #endregion

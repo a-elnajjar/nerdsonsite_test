@@ -1,10 +1,7 @@
-﻿using nerdsonsite_test.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using nerdsonsite_test.Models;
 
 namespace nerdsonsite_test.API
 {
@@ -20,7 +17,7 @@ namespace nerdsonsite_test.API
         // GET api/<controller>/5
         public Car Get(int id)
         {
-            var  c = _cars.GetCar(id);
+            Car c = _cars.GetCar(id);
             if (c == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             return c;
@@ -43,7 +40,7 @@ namespace nerdsonsite_test.API
         // DELETE api/<controller>/5
         public Car Delete(int id)
         {
-            var c = _cars.GetCar(id);
+            Car c = _cars.GetCar(id);
             _cars.Remove(id);
             return c;
         }

@@ -3,7 +3,6 @@ using System.Web;
 using System.Web.UI;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Owin;
 using nerdsonsite_test.Models;
 
 namespace nerdsonsite_test.Account
@@ -25,7 +24,6 @@ namespace nerdsonsite_test.Account
                 {
                     FailureText.Text = "The user either does not exist or is not confirmed.";
                     ErrorMessage.Visible = true;
-                    return;
                 }
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send email with the code and the redirect to reset password page

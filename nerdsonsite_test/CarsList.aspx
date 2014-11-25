@@ -31,7 +31,7 @@
             </tfoot>
         </table>
     </div>
-      <div>
+    <div>
         <a href="/CarForm.aspx" class="btn btn-default"  role="button">Add Car</a>
     </div>
 </asp:Content>

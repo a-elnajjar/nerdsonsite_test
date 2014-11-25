@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Web;
+using System.Web.UI;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Owin;
 using nerdsonsite_test.Models;
 
 namespace nerdsonsite_test.Account
 {
-    public partial class RegisterExternalLogin : System.Web.UI.Page
+    public partial class RegisterExternalLogin : Page
     {
         protected string ProviderName
         {
-            get { return (string)ViewState["ProviderName"] ?? String.Empty; }
+            get { return (string) ViewState["ProviderName"] ?? String.Empty; }
             private set { ViewState["ProviderName"] = value; }
         }
 
         protected string ProviderAccountKey
         {
-            get { return (string)ViewState["ProviderAccountKey"] ?? String.Empty; }
+            get { return (string) ViewState["ProviderAccountKey"] ?? String.Empty; }
             private set { ViewState["ProviderAccountKey"] = value; }
         }
 
@@ -39,29 +39,31 @@ namespace nerdsonsite_test.Account
             if (!IsPostBack)
             {
                 var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                var loginInfo = Context.GetOwinContext().Authentication.GetExternalLoginInfo();
+                ExternalLoginInfo loginInfo = Context.GetOwinContext().Authentication.GetExternalLoginInfo();
                 if (loginInfo == null)
                 {
                     RedirectOnFail();
                     return;
                 }
-                var user = manager.Find(loginInfo.Login);
+                ApplicationUser user = manager.Find(loginInfo.Login);
                 if (user != null)
                 {
-                    IdentityHelper.SignIn(manager, user, isPersistent: false);
+                    IdentityHelper.SignIn(manager, user, false);
                     IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
                 }
                 else if (User.Identity.IsAuthenticated)
                 {
                     // Apply Xsrf check when linking
-                    var verifiedloginInfo = Context.GetOwinContext().Authentication.GetExternalLoginInfo(IdentityHelper.XsrfKey, User.Identity.GetUserId());
+                    ExternalLoginInfo verifiedloginInfo =
+                        Context.GetOwinContext()
+                            .Authentication.GetExternalLoginInfo(IdentityHelper.XsrfKey, User.Identity.GetUserId());
                     if (verifiedloginInfo == null)
                     {
                         RedirectOnFail();
                         return;
                     }
 
-                    var result = manager.AddLogin(User.Identity.GetUserId(), verifiedloginInfo.Login);
+                    IdentityResult result = manager.AddLogin(User.Identity.GetUserId(), verifiedloginInfo.Login);
                     if (result.Succeeded)
                     {
                         IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
@@ -69,7 +71,6 @@ namespace nerdsonsite_test.Account
                     else
                     {
                         AddErrors(result);
-                        return;
                     }
                 }
                 else
@@ -77,8 +78,8 @@ namespace nerdsonsite_test.Account
                     email.Text = loginInfo.Email;
                 }
             }
-        }        
-        
+        }
+
         protected void LogIn_Click(object sender, EventArgs e)
         {
             CreateAndLoginUser();
@@ -91,11 +92,11 @@ namespace nerdsonsite_test.Account
                 return;
             }
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var user = new ApplicationUser() { UserName = email.Text, Email = email.Text };
+            var user = new ApplicationUser {UserName = email.Text, Email = email.Text};
             IdentityResult result = manager.Create(user);
             if (result.Succeeded)
             {
-                var loginInfo = Context.GetOwinContext().Authentication.GetExternalLoginInfo();
+                ExternalLoginInfo loginInfo = Context.GetOwinContext().Authentication.GetExternalLoginInfo();
                 if (loginInfo == null)
                 {
                     RedirectOnFail();
@@ -104,7 +105,7 @@ namespace nerdsonsite_test.Account
                 result = manager.AddLogin(user.Id, loginInfo.Login);
                 if (result.Succeeded)
                 {
-                    IdentityHelper.SignIn(manager, user, isPersistent: false);
+                    IdentityHelper.SignIn(manager, user, false);
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // var code = manager.GenerateEmailConfirmationToken(user.Id);
@@ -117,9 +118,9 @@ namespace nerdsonsite_test.Account
             AddErrors(result);
         }
 
-        private void AddErrors(IdentityResult result) 
+        private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors) 
+            foreach (string error in result.Errors)
             {
                 ModelState.AddModelError("", error);
             }

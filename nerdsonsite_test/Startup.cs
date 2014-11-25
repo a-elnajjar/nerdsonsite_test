@@ -1,11 +1,15 @@
 ﻿using Microsoft.Owin;
+using nerdsonsite_test;
 using Owin;
 
-[assembly: OwinStartupAttribute(typeof(nerdsonsite_test.Startup))]
+[assembly: OwinStartup(typeof (Startup))]
+
 namespace nerdsonsite_test
 {
-    public partial class Startup {
-        public void Configuration(IAppBuilder app) {
+    public partial class Startup
+    {
+        public void Configuration(IAppBuilder app)
+        {
             ConfigureAuth(app);
         }
     }

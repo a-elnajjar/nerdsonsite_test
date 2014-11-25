@@ -4,7 +4,6 @@ using System.Web;
 using System.Web.UI;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Owin;
 using nerdsonsite_test.Models;
 
 namespace nerdsonsite_test.Account
@@ -14,11 +13,11 @@ namespace nerdsonsite_test.Account
         protected void CreateUser_Click(object sender, EventArgs e)
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var user = new ApplicationUser() { UserName = Email.Text, Email = Email.Text };
+            var user = new ApplicationUser {UserName = Email.Text, Email = Email.Text};
             IdentityResult result = manager.Create(user, Password.Text);
             if (result.Succeeded)
             {
-                IdentityHelper.SignIn(manager, user, isPersistent: false);
+                IdentityHelper.SignIn(manager, user, false);
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 //string code = manager.GenerateEmailConfirmationToken(user.Id);
@@ -27,7 +26,7 @@ namespace nerdsonsite_test.Account
 
                 IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
             }
-            else 
+            else
             {
                 ErrorMessage.Text = result.Errors.FirstOrDefault();
             }

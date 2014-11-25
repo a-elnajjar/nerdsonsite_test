@@ -3,7 +3,6 @@ using System.Web;
 using System.Web.UI;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Owin;
 using nerdsonsite_test.Models;
 
 namespace nerdsonsite_test.Account
@@ -16,7 +15,7 @@ namespace nerdsonsite_test.Account
             // Enable this once you have account confirmation enabled for password reset functionality
             // ForgotPasswordHyperLink.NavigateUrl = "Forgot";
             OpenAuthLogin.ReturnUrl = Request.QueryString["ReturnUrl"];
-            var returnUrl = HttpUtility.UrlEncode(Request.QueryString["ReturnUrl"]);
+            string returnUrl = HttpUtility.UrlEncode(Request.QueryString["ReturnUrl"]);
             if (!String.IsNullOrEmpty(returnUrl))
             {
                 RegisterHyperLink.NavigateUrl += "?ReturnUrl=" + returnUrl;

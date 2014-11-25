@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace nerdsonsite_test.Models
 {
-
-
     public interface ICarRepository
     {
         IEnumerable<Car> GetAllCars();
@@ -57,17 +52,14 @@ namespace nerdsonsite_test.Models
             {
                 return false;
             }
-            else
-            {
-                newCar.Manufacturer = car.Manufacturer;
-                newCar.Make = car.Make;
-                newCar.Year = car.Year;
-                newCar.Colour = car.Colour;
-                newCar.PassengerSeat = car.PassengerSeat;
+            newCar.Manufacturer = car.Manufacturer;
+            newCar.Make = car.Make;
+            newCar.Year = car.Year;
+            newCar.Colour = car.Colour;
+            newCar.PassengerSeat = car.PassengerSeat;
 
-                _dbCarsEntities.SaveChanges();
-                return true;
-            }
+            _dbCarsEntities.SaveChanges();
+            return true;
         }
     }
 }

@@ -2,27 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.UI;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
-using Owin;
 using nerdsonsite_test.Models;
 
 namespace nerdsonsite_test.Account
 {
-    public partial class Manage : System.Web.UI.Page
+    public partial class Manage : Page
     {
-        protected string SuccessMessage
-        {
-            get;
-            private set;
-        }
+        protected string SuccessMessage { get; private set; }
 
-        protected bool CanRemoveExternalLogins
-        {
-            get;
-            private set;
-        }
+        protected bool CanRemoveExternalLogins { get; private set; }
 
         private bool HasPassword(ApplicationUserManager manager)
         {
@@ -47,17 +38,20 @@ namespace nerdsonsite_test.Account
                 CanRemoveExternalLogins = manager.GetLogins(User.Identity.GetUserId()).Count() > 1;
 
                 // Render success message
-                var message = Request.QueryString["m"];
+                string message = Request.QueryString["m"];
                 if (message != null)
                 {
                     // Strip the query string from action
                     Form.Action = ResolveUrl("~/Account/Manage");
 
                     SuccessMessage =
-                        message == "ChangePwdSuccess" ? "Your password has been changed."
-                        : message == "SetPwdSuccess" ? "Your password has been set."
-                        : message == "RemoveLoginSuccess" ? "The account was removed."
-                        : String.Empty;
+                        message == "ChangePwdSuccess"
+                            ? "Your password has been changed."
+                            : message == "SetPwdSuccess"
+                                ? "Your password has been set."
+                                : message == "RemoveLoginSuccess"
+                                    ? "The account was removed."
+                                    : String.Empty;
                     successMessage.Visible = !String.IsNullOrEmpty(SuccessMessage);
                 }
             }
@@ -68,11 +62,12 @@ namespace nerdsonsite_test.Account
             if (IsValid)
             {
                 var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                IdentityResult result = manager.ChangePassword(User.Identity.GetUserId(), CurrentPassword.Text, NewPassword.Text);
+                IdentityResult result = manager.ChangePassword(User.Identity.GetUserId(), CurrentPassword.Text,
+                    NewPassword.Text);
                 if (result.Succeeded)
                 {
-                    var user = manager.FindById(User.Identity.GetUserId());
-                    IdentityHelper.SignIn(manager, user, isPersistent: false);
+                    ApplicationUser user = manager.FindById(User.Identity.GetUserId());
+                    IdentityHelper.SignIn(manager, user, false);
                     Response.Redirect("~/Account/Manage?m=ChangePwdSuccess");
                 }
                 else
@@ -103,7 +98,7 @@ namespace nerdsonsite_test.Account
         public IEnumerable<UserLoginInfo> GetLogins()
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var accounts = manager.GetLogins(User.Identity.GetUserId());
+            IList<UserLoginInfo> accounts = manager.GetLogins(User.Identity.GetUserId());
             CanRemoveExternalLogins = accounts.Count() > 1 || HasPassword(manager);
             return accounts;
         }
@@ -111,12 +106,13 @@ namespace nerdsonsite_test.Account
         public void RemoveLogin(string loginProvider, string providerKey)
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var result = manager.RemoveLogin(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
+            IdentityResult result = manager.RemoveLogin(User.Identity.GetUserId(),
+                new UserLoginInfo(loginProvider, providerKey));
             string msg = String.Empty;
             if (result.Succeeded)
             {
-                var user = manager.FindById(User.Identity.GetUserId());
-                IdentityHelper.SignIn(manager, user, isPersistent: false);
+                ApplicationUser user = manager.FindById(User.Identity.GetUserId());
+                IdentityHelper.SignIn(manager, user, false);
                 msg = "?m=RemoveLoginSuccess";
             }
             Response.Redirect("~/Account/Manage" + msg);
@@ -124,7 +120,7 @@ namespace nerdsonsite_test.Account
 
         private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors)
+            foreach (string error in result.Errors)
             {
                 ModelState.AddModelError("", error);
             }

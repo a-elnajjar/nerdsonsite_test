@@ -1,7 +1,8 @@
 nerdsonsite_test
 ================
 
-I created this Web app CRUD Demo using Asp.net to show following skillset 
+I created this Web app CRUD Demo using Asp.net to show following skillsets 
+
 1-EF(repository pattern  and unit of work(model)) 
 
 2-web Api"RESTful api"

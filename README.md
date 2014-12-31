@@ -11,6 +11,6 @@ I created this Web app CRUD Demo using Asp.net to show following skillsets
 
 4-how to consume and use  JSON object using JQuery  
 
-3- html5 and CSS3 Framework bootstrap CarsList.aspx and CarForm.aspx.
+5- html5 and CSS3 Framework bootstrap CarsList.aspx and CarForm.aspx.
 
-5-MVVM
+6-MVVM

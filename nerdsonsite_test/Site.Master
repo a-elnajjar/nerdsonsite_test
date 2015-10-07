@@ -14,10 +14,7 @@
         <webopt:bundlereference runat="server" path="~/Content/css" />
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <link href="Content/bootstrap.css" rel="stylesheet" />
-   
-    
-
-
+  
     </head>
     <body>
         <form runat="server">
@@ -38,11 +35,11 @@
                     <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
                     <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                     <asp:ScriptReference Name="WebFormsBundle" />
+                    <asp:ScriptReference Path="~/Scripts/script.js"/>
+                        
                     <%--Site Scripts--%>
                 </Scripts>
             </asp:ScriptManager>
-            <script src="Scripts/script.js"></script>
-
             <div class="navbar navbar-inverse navbar-fixed-top">
                 <div class="container">
                     <div class="navbar-header">

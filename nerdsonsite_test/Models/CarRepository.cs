@@ -2,16 +2,16 @@
 
 namespace nerdsonsite_test.Models
 {
-    public interface ICarRepository
+    public interface ICarRepository<T>
     {
-        IEnumerable<Car> GetAllCars();
-        Car GetCar(int id);
-        Car AddCar(Car car);
+        IEnumerable<T> GetAllCars();
+        T GetCar(int id);
+        T AddCar(T car);
         void Remove(int id);
-        bool Update(Car car);
+        bool Update(T car);
     }
 
-    public class CarRepository : ICarRepository
+    public class CarRepository : ICarRepository<Car>
     {
         private readonly CarsEntities _dbCarsEntities;
 
@@ -38,13 +38,6 @@ namespace nerdsonsite_test.Models
             return car;
         }
 
-        public void Remove(int id)
-        {
-            Car c = _dbCarsEntities.Cars.Find(id);
-            _dbCarsEntities.Cars.Remove(c);
-            _dbCarsEntities.SaveChanges();
-        }
-
         public bool Update(Car car)
         {
             Car newCar = _dbCarsEntities.Cars.Find(car.Id);
@@ -61,5 +54,14 @@ namespace nerdsonsite_test.Models
             _dbCarsEntities.SaveChanges();
             return true;
         }
+
+
+        public void Remove(int id)
+        {
+            Car c = _dbCarsEntities.Cars.Find(id);
+            _dbCarsEntities.Cars.Remove(c);
+            _dbCarsEntities.SaveChanges();
+        }
     }
+
 }

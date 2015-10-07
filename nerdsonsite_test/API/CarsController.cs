@@ -7,7 +7,7 @@ namespace nerdsonsite_test.API
 {
     public class CarsController : ApiController
     {
-        private static readonly ICarRepository _cars = new CarRepository();
+        private static readonly ICarRepository<Car> _cars = new CarRepository();
         // GET api/<controller>
         public IEnumerable<Car> Get()
         {
